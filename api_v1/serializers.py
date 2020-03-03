@@ -25,8 +25,6 @@ class CustomerAccountSerializer(serializers.ModelSerializer):
 class TransactionSerializer(serializers.ModelSerializer):
     customer_from = CustomerSerializer()
     customer_to = CustomerSerializer()
-    account_from = AccountSerializer()
-    account_to = AccountSerializer()
 
     class Meta:
         model = Transaction
@@ -34,9 +32,13 @@ class TransactionSerializer(serializers.ModelSerializer):
             'action',
             'amount',
             'customer_from',
-            'account_from',
             'customer_to',
-            'account_to',
+            'account_from_uuid',
+            'account_from_currency',
+            'account_from_amount',
+            'account_to_uuid',
+            'account_to_currency',
+            'account_to_amount',
             'created_at'
         )
 

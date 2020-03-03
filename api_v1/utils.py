@@ -1,7 +1,7 @@
 from decimal import Decimal
 from typing import Dict
 
-from wallet.models import Account
+from wallet.models import Account, Action, Transaction
 from app.settings import TRANSFER_FEE_PERCENT
 from api_v1.serializers import TransferSerializer, AccountSerializer
 
@@ -46,3 +46,22 @@ def get_success_response(account_from: Account, account_to: Account) -> Dict:
             'account': AccountSerializer(account_to).data
         },
     }
+
+
+def get_history_tx(account_from: Account, account_to: Account,
+                   amount: Decimal, action: Action) -> Transaction:
+    """ Prepare history transaction object """
+    return Transaction(
+        customer_from=account_from.customer,
+        customer_to=account_to.customer,
+        account_from=account_from,
+        account_from_uuid=account_from.uuid,
+        account_from_currency=account_from.currency,
+        account_from_amount=account_from.amount,
+        account_to=account_to,
+        account_to_uuid=account_to.uuid,
+        account_to_currency=account_to.currency,
+        account_to_amount=account_to.amount,
+        amount=amount,
+        action=action
+    )

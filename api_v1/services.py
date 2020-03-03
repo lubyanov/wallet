@@ -12,8 +12,13 @@ from rest_framework.status import (
 
 from wallet.models import Account, Currency, Transaction, Action
 from api_v1.validations import transfer_data_validate
-from api_v1.utils import is_self_transfer, calculate_fee, get_success_response
 from api_v1.serializers import CustomerAccountSerializer, TransferSerializer
+from api_v1.utils import (
+    is_self_transfer,
+    calculate_fee,
+    get_success_response,
+    get_history_tx
+)
 
 
 INITIAL_ACCOUNT_DATA = (
@@ -59,14 +64,8 @@ def transfer(data: TransferSerializer) -> Tuple[Dict, int]:
             account_to.amount = account_to.amount + amount
             account_to.save()
 
-            Transaction(
-                customer_from=account_from.customer,
-                customer_to=account_to.customer,
-                account_from=account_from,
-                account_to=account_to,
-                amount=amount,
-                action=Action.TRANSFER
-            ).save()
+            tx = get_history_tx(account_from, account_to, amount, Action.TRANSFER)
+            tx.save()
 
             result = get_success_response(account_from, account_to)
 
@@ -103,14 +102,9 @@ def create_customer_with_wallet(
                     amount=amount
                 )
                 account.save()
-                Transaction(
-                    customer_from=customer,
-                    customer_to=customer,
-                    account_from=account,
-                    account_to=account,
-                    amount=amount,
-                    action=Action.INITIAL
-                ).save()
+                tx = get_history_tx(account, account,
+                                    Decimal(amount), Action.INITIAL)
+                tx.save()
     except Error as err:
         errors = {'errors': [{'database': str(err)}]}
         return errors, HTTP_500_INTERNAL_SERVER_ERROR

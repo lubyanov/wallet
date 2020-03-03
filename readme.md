@@ -19,6 +19,18 @@
 }
 ```
 
+5. Open ``http://localhost:8080/api/v1/transactions/`` to see history transactions
+
+```
+// sorting
+?ordering=-created_at&action=[INITIAL|TRANSFER]
+
+// filtering
+?action=[INITIAL|TRANSFER]
+?account_from_uuid=<uuid>
+?account_to_uuid=<uuid>
+```
+
 
 ### Assumptions
 
