@@ -22,6 +22,15 @@ def transfer_data_validate(account_from: Account,
                            account_to: Account,
                            data: TransferSerializer,
                            amount: Decimal) -> Mapping[str, list]:
+    """
+    Validates incoming transfer request
+
+    Must assure that accounts belongs to their customers and
+    accounts have enough amount to transfer with fee or not
+
+    Returns:
+        Mapping[str, str] - dict with errors if they are exist
+    """
 
     errors = {'errors': []}
 

@@ -38,6 +38,7 @@ class Transfer(APIView):
     def post(self, request: Request, *args, **kwargs) -> Response:
         serializer = TransferSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+
         response_data, response_status = transfer(serializer.data)
 
         return Response(
